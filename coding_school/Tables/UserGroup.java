@@ -1,4 +1,4 @@
-package coding_school;
+package coding_school.Tables;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

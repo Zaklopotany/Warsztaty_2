@@ -1,4 +1,4 @@
-package coding_school;
+package coding_school.Tables;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -132,6 +132,35 @@ public class Excersise {
 			
 			prepStat.executeUpdate();
 		}
+	}
+	
+	//load all user solution by user id
+	public static Solution[] loadAllByUserId(Connection con, String id) throws SQLException {
+		String sql = "select s.excersise_id,s.created,s.updated,s.description from excersise e "
+				+ "join solution s on e.id = s.excersise_id "
+				+ "where s.users_id = ? "
+				+ "order by s.excersise_id ASC;";
+		
+		ArrayList<Solution> tempSolList = new ArrayList<Solution>();
+		
+		PreparedStatement prepStat = con.prepareStatement(sql);
+		prepStat.setString(1, id);
+		
+		ResultSet rs = prepStat.executeQuery();
+		while(rs.next()) {
+			Solution tempSol = new Solution();
+			tempSol.setCreated(rs.getString("created"));
+			tempSol.setUpdated(rs.getString("updated"));
+			tempSol.setDescription(rs.getString("description"));
+			tempSol.setExcersiseId(rs.getInt("excersise_id"));
+
+			tempSolList.add(tempSol);
+		}
+		
+		Solution[] tempSolArr = new Solution[tempSolList.size()];
+		tempSolList.toArray(tempSolArr);
+		
+		return tempSolArr;
 	}
 
 }

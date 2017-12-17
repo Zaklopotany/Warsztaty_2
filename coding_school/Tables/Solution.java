@@ -1,4 +1,4 @@
-package coding_school;
+package coding_school.Tables;
 
 import java.math.BigInteger;
 import java.sql.Connection;
@@ -202,6 +202,38 @@ public class Solution {
 			
 			prepStat.executeUpdate();
 		}
+	}
+	
+	public static Solution[] loadAllByExcersiseId(Connection con, int id) throws SQLException {
+		String sql ="select s.excersise_id, s.users_id, s.created,"
+				+ "s.updated,s.description "
+				+ "from solution s join excersise e "
+				+ "on s.excersise_id = e.id "
+				+ "where e.id = ? "
+				+ "order by s.created desc";
+		
+		ArrayList<Solution> tempSolList = new ArrayList<Solution>();
+		
+		PreparedStatement prepStat = con.prepareStatement(sql);
+		prepStat.setInt(1, id);
+		ResultSet rs = prepStat.executeQuery();
+		
+		while (rs.next()) {
+			Solution tempSol = new Solution();
+			tempSol.setCreated(rs.getString("created"));
+			tempSol.setUpdated(rs.getString("updated"));
+			tempSol.setDescription(rs.getString("description"));
+			tempSol.setExcersiseId(rs.getInt("excersise_id"));
+			tempSol.setUsersId(rs.getString("users_id"));
+			
+			tempSolList.add(tempSol);
+		}
+		
+		Solution[] solArr = new Solution[tempSolList.size()];
+		tempSolList.toArray(solArr);
+		
+		return solArr;
+		
 	}
 
 	// cnovert DateTime date = DateTime.parse("04/02/2011 20:27:05",

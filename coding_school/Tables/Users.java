@@ -1,4 +1,4 @@
-package coding_school;
+package coding_school.Tables;
 
 import java.math.BigInteger;
 import java.sql.Connection;
@@ -158,12 +158,40 @@ public class Users {
 
 	public void delete(Connection con) throws SQLException{
 		if (!this.getId().equals("0")) {
-			String sql = "delete from users where id = ?";
+			String sql = "delete from users where id = ?;";
 			PreparedStatement prepStat = con.prepareStatement(sql);
 			prepStat.setString(1, this.getId());
 			
 			prepStat.executeUpdate();
 		}
 	}
-
+	
+	//TODO zastanowić się nad setterami i getteramoi big inta czy zostawić jako strring czy zastosować funkcje result seta
+	
+	public static Users[] loadAllByGroupId(Connection con, int id) throws SQLException{
+		String sql ="Select u.id, u.username, u.email "
+				+ "from users u join user_group ug "
+				+ "on ug.id = u.person_group_id "
+				+ "where ug.id = ?;";
+		ArrayList<Users> tempUsersList = new ArrayList<Users>();
+		
+		PreparedStatement prepStat = con.prepareStatement(sql);
+		prepStat.setInt(1, id);
+		
+		ResultSet rs = prepStat.executeQuery();
+		
+		while(rs.next()) {
+			Users tempUser = new Users();
+			tempUser.setId(rs.getString("id"));
+			tempUser.setUserName(rs.getString("username"));
+			tempUser.setEmail(rs.getString("email"));
+			
+			tempUsersList.add(tempUser);
+		}
+		
+		Users[] tempUsersArr = new Users[tempUsersList.size()];
+		tempUsersList.toArray(tempUsersArr);
+		
+		return tempUsersArr;
+	}
 }
