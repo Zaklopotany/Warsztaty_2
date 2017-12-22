@@ -101,10 +101,10 @@ public class Users {
 
 	// load excersise by id
 
-	public static Users loadById(Connection con, int id) throws SQLException {
+	public static Users loadById(Connection con, String id) throws SQLException {
 		String sql = "Select * from users where id = ?;";
 		PreparedStatement prepStat = con.prepareStatement(sql);
-		prepStat.setInt(1, id);
+		prepStat.setString(1, id);
 		ResultSet rs = prepStat.executeQuery();
 
 		Users tempUsr = null;
@@ -193,5 +193,15 @@ public class Users {
 		tempUsersList.toArray(tempUsersArr);
 		
 		return tempUsersArr;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder strB = new StringBuilder();
+		strB.append(this.getId()).append(" ").append(this.getUserName())
+		.append(" ").append(this.getEmail()).append(" ")
+		.append(this.getPersonGroupId());
+		
+		return strB.toString();
 	}
 }
